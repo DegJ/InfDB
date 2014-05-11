@@ -33,7 +33,7 @@ public class InfDB {
         } catch (ClassNotFoundException e) {
             throw new InfException("Class not found, add the library for Firebird");
         } catch (SQLException e) {
-            throw new InfException("Couldn't open Firebird database, check your path");
+            throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
         }
     }
 
@@ -120,11 +120,24 @@ public class InfDB {
         return result;
     }
 
-    public String getAutoIncrement(String table,String attribut){
+    public String getAutoIncrement(String table,String attribut) throws InfException{
         String result=null;
-
-
-
+        String query="SELECT "+attribut+" FROM "+table+" ORDER BY "+attribut+" DESC";
+        try{
+            Statement sm=con.createStatement();
+            ResultSet rs=sm.executeQuery(query);
+            if(rs.next()){
+                String inc=rs.getString(1);
+                if(inc.matches("\\d+")) {
+                    int lastInt = Integer.parseInt(inc);
+                    lastInt++;
+                    result = "" + lastInt;
+                }
+            }
+        } catch (SQLException e) {
+            throw new InfException("getAutoIncrement statement didn't work - check your query, only works with columns containing only numbers");
+        }
         return result;
+        // @todo use String.split() to be able to use whatever + a number for increment
     }
 }

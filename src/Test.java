@@ -66,6 +66,15 @@ public class Test {
         }
 
     }
+    private void testGetAutoIncrement(){
+        String res="";
+        try{
+            res=db.getAutoIncrement("agent", "aid");
+        } catch (InfException e) {
+            e.printStackTrace();
+        }
+        if(res!=null)System.out.println(res);
+    }
 
     public static void main(String[] args) {
         Test something=new Test();
@@ -73,6 +82,7 @@ public class Test {
        // something.testFetchColumn();
        // something.testFetchRow();
         something.testFetchRows();
+        something.testGetAutoIncrement();
     }
 
 
