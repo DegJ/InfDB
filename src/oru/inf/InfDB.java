@@ -1,6 +1,7 @@
 /**
- * Created by Nicklas on 2014-05-11.
+ * Created by Nicklas Magnusson on 2014-05-11. Project: InfDB
  */
+package oru.inf;
 
 import java.sql.*;
 import java.util.ArrayList;

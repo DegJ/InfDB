@@ -1,3 +1,5 @@
+import oru.inf.InfDB;
+import oru.inf.InfException;
 import se.oru.informatik.InformatikDB;
 import se.oru.informatik.InformatikException;
 
