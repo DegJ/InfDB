@@ -265,7 +265,7 @@ public class InfDB {
      * @param query SQL query for the DB
      * @throws InfException If the DB reported an error with the query an error is thrown containing a message why the error occurred
      */
-    public void mod(String query) throws InfException {
+    private void mod(String query) throws InfException {
         try {
             checkConnection();
             Statement sm = con.createStatement();
@@ -279,8 +279,7 @@ public class InfDB {
 
     /**
      * insert
-     * Inserting a row into the DB
-     * here for legacy reasons, otherwise use mod() for modifications to DB
+     * Inserting a row into the DB using SQL syntax INSERT INTO
      *
      * @param query SQL query for the DB
      * @throws InfException If insert isn't correctly formatted throws an error
@@ -293,8 +292,7 @@ public class InfDB {
 
     /**
      * delete
-     * Deleting a row from the DB
-     * here for legacy reasons, otherwise use mod() for modifications to DB
+     * Deleting a row from the DB using SQL syntax DELETE FROM
      *
      * @param query SQL query for the DB
      * @throws InfException If delete isn't correctly formatted throws an error
@@ -307,8 +305,7 @@ public class InfDB {
 
     /**
      * update
-     * Updating a row or value in the DB
-     * here for legacy reasons, otherwise use mod() for modifications to DB
+     * Updating a row or value in the DB using SQL syntax UPDATE ... SET
      *
      * @param query SQL query for the DB
      * @throws InfException If update isn't correctly formatted throws an error
