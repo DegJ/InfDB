@@ -1,4 +1,5 @@
 import se.oru.informatik.InformatikDB;
+import se.oru.informatik.InformatikException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class Test {
         try{
             text=db.fetchSingle("SELECT namn from AGENT where AID=1");
         } catch(InfException e){
-            e.getMsg();
+            e.getMessage();
         }
         if(text!=null) System.out.println(text);
     }
@@ -33,7 +34,7 @@ public class Test {
         try {
             arryn = db.fetchColumn("Select namn from Agent");
         } catch (InfException e) {
-            e.getMsg();
+            e.getMessage();
         }
         for(String e:arryn){
             System.out.println(e);
@@ -76,13 +77,56 @@ public class Test {
         if(res!=null)System.out.println(res);
     }
 
+    private void testInsert(){
+        try{
+            db.insert("insert into agent values ("+db.getAutoIncrement("agent","aid")+",'name',13371337,'a@a.com')");
+            System.out.println("inserted");
+        } catch (InfException e) {
+            e.printError();
+        }
+    }
+
+    private void testDelete(){
+        try{
+            db.delete("delete from agent where aid=6");
+            System.out.println("deleted");
+        } catch (InfException e) {
+            e.printStackTrace();
+        }
+    }
+    private void testUpdate(){
+        try{
+            db.update("Update agent set namn='Pelle' where aid=5");
+            System.out.println("updated");
+        } catch (InfException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void testDBA(){
+        try{
+            dba= new InformatikDB("C:/Skolan/ECA.FDB");
+        } catch (InformatikException e) {
+            e.printStackTrace();
+        }
+        try{
+            dba.update("delete from agent where aid=5");
+        } catch (InformatikException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         Test something=new Test();
-        //something.testFetchSingle();
+       // something.testFetchSingle();
        // something.testFetchColumn();
        // something.testFetchRow();
-        something.testFetchRows();
-        something.testGetAutoIncrement();
+       // something.testFetchRows();
+       // something.testGetAutoIncrement();
+        something.testInsert();
+       // something.testDelete();
+       // something.testUpdate();
+       // something.testDBA();
     }
 
 

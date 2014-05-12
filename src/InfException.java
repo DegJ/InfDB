@@ -9,18 +9,15 @@ public class InfException extends java.sql.SQLException {
     public InfException(Exception e){
         super(e);
         msg=super.getMessage();
-        System.err.println(prefix+"Something went wrong with the database: cause ->");
-        System.err.println(prefix+getMsg());
-
     }
     public InfException(String e){
         super(e);
         msg=super.getMessage();
-        System.err.println(prefix+"Something went wrong with the database: cause ->");
-        System.err.println(prefix+getMsg());
-
     }
-    public String getMsg(){
-        return msg;
+    public String getMessage(){
+        return prefix+msg;
+    }
+    public void printError(){
+        System.err.println(prefix+msg);
     }
 }
