@@ -18,10 +18,15 @@ public class InfDB {
      * Constructor for the DB class
      *
      * @param path Path to the Firebird DB, for example C:/DB.FDB or for Mac /User/DB.FDB
-     * @throws InfException
+     * @throws InfException If the DB connection couldn't be established.
      */
     public InfDB(String path) throws InfException {
         this.path = path;
+        try{
+            initConnection();
+        } catch (InfException e) {
+            throw new InfException(e);
+        }
     }
 
     /**
