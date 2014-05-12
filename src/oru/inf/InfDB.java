@@ -1,14 +1,15 @@
-/**
- * Created by Nicklas Magnusson on 2014-05-11. Project: InfDB
- * @author Nicklas Magnusson <nicmav141@studentmail.oru.se>
- * @version 0.1
- */
 package oru.inf;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * <p>Class managing the underlying database (Firebird).</p>
+ * Created by Nicklas Magnusson on 2014-05-11. Project: InfDB
+ * @author Nicklas Magnusson nicmav141@studentmail.oru.se
+ * @version 0.1
+ */
 public class InfDB {
     private Connection con;
     private String path;
@@ -206,7 +207,7 @@ public class InfDB {
     /**
      * getAutoIncrement
      * Retrieves and counts a number upwards for a column that contains Integers,
-     * to simulate an incrementing number. Also works on columns containing letters+numbers,
+     * to simulate an incrementing number. Also works on columns containing letters+numbers(or numbers+letters),
      * by replicating the letters and counting the number upwards.
      *
      * @param table    The table where the number(ID) is located

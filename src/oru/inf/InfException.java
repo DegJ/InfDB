@@ -1,8 +1,9 @@
 package oru.inf;
 
 /**
+ * <p>Exception class for InfDB.</p>
  * Created by Nicklas Magnusson on 2014-05-11. Project: InfDB
- * @author Nicklas Magnusson <nicmav141@studentmail.oru.se>
+ * @author Nicklas Magnusson nicmav141@studentmail.oru.se
  * @version 0.1
  */
 public class InfException extends java.sql.SQLException {
