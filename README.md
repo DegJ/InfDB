@@ -4,7 +4,7 @@ InfDB
 Informatik Databasklass
 
 Usage:
-Download InfDB.jar and import it as a library to your project.
+Download InfDB.jar and jaybird-full-2.2.5.jar and import them as libraries to your project.
 Import the database class and exception;
 
 import oru.inf.InfDB;
