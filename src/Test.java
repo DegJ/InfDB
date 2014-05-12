@@ -1,8 +1,5 @@
 import oru.inf.InfDB;
 import oru.inf.InfException;
-import se.oru.informatik.InformatikDB;
-import se.oru.informatik.InformatikException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,14 +8,13 @@ import java.util.HashMap;
  */
 public class Test {
     private InfDB db;
-    private InformatikDB dba;
 
     public Test(){
         try {
-            db=new InfDB("C:/Skolan/ECA.FDB");
+            db=new InfDB("/Users/Nicklas/Skolan/SUP/ECA.FDB");
             System.out.println("worked [from test.java]");
         } catch (InfException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             System.out.println("didnt work [from test.java]");
         }
     }
@@ -105,30 +101,16 @@ public class Test {
         }
     }
 
-    private void testDBA(){
-        try{
-            dba= new InformatikDB("C:/Skolan/ECA.FDB");
-        } catch (InformatikException e) {
-            e.printStackTrace();
-        }
-        try{
-            dba.update("delete from agent where aid=5");
-        } catch (InformatikException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) {
         Test something=new Test();
-       // something.testFetchSingle();
-       // something.testFetchColumn();
-       // something.testFetchRow();
-       // something.testFetchRows();
-       // something.testGetAutoIncrement();
-        something.testInsert();
-       // something.testDelete();
-       // something.testUpdate();
-       // something.testDBA();
+       something.testFetchSingle();
+       something.testFetchColumn();
+       something.testFetchRow();
+       something.testFetchRows();
+       something.testGetAutoIncrement();
+       something.testInsert();
+       something.testDelete();
+       something.testUpdate();
     }
 
 
