@@ -21,7 +21,7 @@ public class InfDB {
             this.path = path;
             initConnection();
         } catch (InfException e) {
-            e.printError();
+            throw new InfException(e);
         }
     }
 
