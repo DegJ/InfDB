@@ -1,5 +1,7 @@
 /**
  * Created by Nicklas Magnusson on 2014-05-11. Project: InfDB
+ * @author Nicklas Magnusson <nicmav141@studentmail.oru.se>
+ * @version 0.1
  */
 package oru.inf;
 
@@ -11,22 +13,21 @@ public class InfDB {
     private Connection con;
     private String path;
 
-    /** InfDB
-     *  Constructor for the DB class
+    /**
+     * InfDB
+     * Constructor for the DB class
+     *
      * @param path Path to the Firebird DB, for example C:/DB.FDB or for Mac /User/DB.FDB
      * @throws InfException
      */
     public InfDB(String path) throws InfException {
-        try {
-            this.path = path;
-            initConnection();
-        } catch (InfException e) {
-            throw new InfException(e);
-        }
+        this.path = path;
     }
 
-    /** initConnection
+    /**
+     * initConnection
      * opens a connection to the DB
+     *
      * @throws InfException If the DB connection couldn't be established, the path to the DB isn't correct or the drivers for the database (jaybird-full-XX.jar) isn't found an error is thrown.
      */
     private void initConnection() throws InfException {
@@ -34,14 +35,16 @@ public class InfDB {
             Class.forName("org.firebirdsql.jdbc.FBDriver");
             con = DriverManager.getConnection("jdbc:firebirdsql:localhost/3050:" + this.path, "SYSDBA", "masterkey");
         } catch (ClassNotFoundException e) {
-            throw new InfException("Class not found, add the library for Firebird");
+            throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
         } catch (SQLException e) {
             throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
         }
     }
 
-    /** closeConnection
+    /**
+     * closeConnection
      * closes the DB connection
+     *
      * @throws InfException If DB connection couldn't be closed an error is thrown.
      */
     private void closeConnection() throws InfException {
@@ -49,6 +52,22 @@ public class InfDB {
             con.close();
         } catch (SQLException e) {
             throw new InfException("Couldn't close the connection to the database");
+        }
+    }
+
+    /**
+     * checkConnection
+     * checks if the DB connection is closed and if so initiates it
+     *
+     * @throws InfException
+     */
+    private void checkConnection() throws InfException {
+        try {
+            if (con == null || con.isClosed()) {
+                initConnection();
+            }
+        } catch (SQLException e) {
+            throw new InfException("A checkConnection to the database failed");
         }
     }
 
@@ -63,6 +82,7 @@ public class InfDB {
     public String fetchSingle(String query) throws InfException {
         String result = null;
         try {
+            checkConnection();
             Statement sm = con.createStatement();
             boolean hasRS = sm.execute(query);
             if (hasRS) {
@@ -73,6 +93,8 @@ public class InfDB {
             }
         } catch (SQLException e) {
             throw new InfException("fetchSingle statement didn't work - check your query");
+        } finally {
+            closeConnection();
         }
         return result;
     }
@@ -88,6 +110,7 @@ public class InfDB {
     public ArrayList<String> fetchColumn(String query) throws InfException {
         ArrayList<String> result = null;
         try {
+            checkConnection();
             Statement sm = con.createStatement();
             ResultSet rs = sm.executeQuery(query);
             while (rs.next()) {
@@ -98,6 +121,8 @@ public class InfDB {
             }
         } catch (SQLException e) {
             throw new InfException("fetchColumn statement didn't work - check your query");
+        } finally {
+            closeConnection();
         }
         return result;
     }
@@ -113,6 +138,7 @@ public class InfDB {
     public HashMap<String, String> fetchRow(String query) throws InfException {
         HashMap<String, String> result = null;
         try {
+            checkConnection();
             Statement sm = con.createStatement();
             ResultSet rs = sm.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -129,6 +155,8 @@ public class InfDB {
             }
         } catch (SQLException e) {
             throw new InfException("fetchRow statement didn't work - check your query");
+        } finally {
+            closeConnection();
         }
         return result;
     }
@@ -145,6 +173,7 @@ public class InfDB {
     public ArrayList<HashMap<String, String>> fetchRows(String query) throws InfException {
         ArrayList<HashMap<String, String>> result = null;
         try {
+            checkConnection();
             Statement sm = con.createStatement();
             ResultSet rs = sm.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -163,6 +192,8 @@ public class InfDB {
             }
         } catch (SQLException e) {
             throw new InfException("fetchRows statement didn't work - check your query");
+        } finally {
+            closeConnection();
         }
         return result;
     }
@@ -170,32 +201,55 @@ public class InfDB {
     /**
      * getAutoIncrement
      * Retrieves and counts a number upwards for a column that contains Integers,
-     * to simulate an incrementing number.
+     * to simulate an incrementing number. Also works on columns containing letters+numbers,
+     * by replicating the letters and counting the number upwards.
      *
      * @param table    The table where the number(ID) is located
      * @param attribut The column name in the table of the number(ID)
      * @return returns the number(ID) +1
-     * @throws InfException If the query didn't work or a column contains something else than numbers an error is thrown.
+     * @throws InfException If the query didn't work or a column contains something else than numbers or letters+numbers an error is thrown.
      */
     public String getAutoIncrement(String table, String attribut) throws InfException {
         String result = null;
         String query = "SELECT " + attribut + " FROM " + table + " ORDER BY " + attribut + " DESC";
         try {
+            checkConnection();
             Statement sm = con.createStatement();
             ResultSet rs = sm.executeQuery(query);
             if (rs.next()) {
                 String inc = rs.getString(1);
-                if (inc.matches("\\d+")) {
+                if (inc.matches("\\D+\\d+") || inc.matches("\\d+\\D+")) {
+                    String[] ar = inc.split("");
+                    String letters = "";
+                    String numbers = "";
+                    for (int i = 0; i < ar.length; i++) {
+                        if (ar[i].matches("\\D")) {
+                            letters += ar[i];
+                        } else if (ar[i].matches("\\d")) {
+                            numbers += ar[i];
+                        }
+                    }
+                    if (numbers.matches("\\d+")) {
+                        int lastInt = Integer.parseInt(numbers);
+                        lastInt++;
+                        if (inc.matches("\\D+\\d+")) {
+                            result = letters + lastInt;
+                        } else {
+                            result = lastInt + letters;
+                        }
+                    }
+                } else if (inc.matches("\\d+")) {
                     int lastInt = Integer.parseInt(inc);
                     lastInt++;
                     result = "" + lastInt;
                 }
             }
         } catch (SQLException e) {
-            throw new InfException("getAutoIncrement statement didn't work - check your query, only works with columns containing only numbers");
+            throw new InfException("getAutoIncrement statement didn't work - check your query, works with columns containing numbers, letters+numbers or numbers+letters");
+        } finally {
+            closeConnection();
         }
         return result;
-        // @todo use String.split() to be able to use whatever + a number for increment
     }
 
     /**
@@ -207,10 +261,13 @@ public class InfDB {
      */
     public void mod(String query) throws InfException {
         try {
+            checkConnection();
             Statement sm = con.createStatement();
             sm.executeUpdate(query);
         } catch (SQLException e) {
             throw new InfException(e);
+        } finally {
+            closeConnection();
         }
     }
 
