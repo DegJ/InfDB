@@ -106,9 +106,14 @@ public class Test {
             e.printStackTrace();
         }
     }
+    private void props(){
+        db.testProp();
+    }
 
     public static void main(String[] args) {
         Test something = new Test();
+        something.props();
+        /*
         something.testFetchSingle();
         something.testFetchColumn();
         something.testFetchRow();
@@ -117,7 +122,7 @@ public class Test {
         something.testInsert();
         something.testDelete();
         something.testUpdate();
-
+*/
 
     }
 

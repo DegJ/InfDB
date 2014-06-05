@@ -1,8 +1,6 @@
 package oru.inf;
-
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * <p>Class managing the underlying database (Firebird).</p>
@@ -30,6 +28,24 @@ public class InfDB {
         }
     }
 
+    public InfDB(String path, HashMap<String,Object> map) throws InfException {
+        this.path = path;
+        try {
+            initConnection(map);
+        } catch (InfException e) {
+            throw new InfException(e);
+        }
+    }
+
+    public void testProp(){
+        Properties prop=new Properties();
+        Set<Object> a=prop.keySet();
+        for(Object o:a){
+            System.out.println(o);
+        }
+        System.out.println("a: "+prop);
+    }
+
     /**
      * initConnection
      * opens a connection to the DB
@@ -39,11 +55,26 @@ public class InfDB {
     private void initConnection() throws InfException {
         try {
             Class.forName("org.firebirdsql.jdbc.FBDriver");
-            con = DriverManager.getConnection("jdbc:firebirdsql:localhost/3050:" + this.path, "SYSDBA", "masterkey");
+            con = DriverManager.getConnection("jdbc:firebirdsql://localhost:3050/" + this.path +"?columnLabelForName=true", "SYSDBA", "masterkey");
         } catch (ClassNotFoundException e) {
             throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
         } catch (SQLException e) {
             throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
+        }
+    }
+
+    private void initConnection(HashMap<String, Object> props) throws InfException {
+        try {
+            if(props.containsKey("EMBEDDED")&&props.containsKey("COLUMNLABELFORNAME")){
+                throw new InfException("Missing parameters from the map or the parameter list contains invalid data, instance defaults from InfDBHelper.getAdvanceMap()");
+            }
+            try {
+                Class.forName("org.firebirdsql.jdbc.FBDriver");
+            } catch (ClassNotFoundException e) {
+                throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
+            }
+        } catch (Exception ex) {
+
         }
     }
 
@@ -135,7 +166,7 @@ public class InfDB {
 
     /**
      * fetchRow
-     * fetches 1 row from the DB, if the query has several rows the first one is selected.
+     * fetches one row from the DB, if the query has several rows the first one is selected.
      *
      * @param query SQL query for the DB
      * @return A HashMap containing the rows values with the columns "name" as their key.
