@@ -8,7 +8,7 @@ import java.util.HashMap;
 public final class InfDBHelper {
 
     private InfDBHelper(){
-
+    // we cant instance this class
     }
 
     static public HashMap<String, Object> getAdvanceMap(){
