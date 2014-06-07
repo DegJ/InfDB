@@ -1,4 +1,5 @@
 import oru.inf.InfDB;
+import oru.inf.InfDBHelper;
 import oru.inf.InfException;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashMap;
  */
 public class Test {
     private InfDB db;
+    private InfDB dba;
 
     public Test() {
         try {
@@ -107,7 +109,10 @@ public class Test {
         }
     }
     private void props(){
-        db.testProp();
+        HashMap<String,Object> res=InfDBHelper.getAdvanceProperties();
+        try {
+            dba = new InfDB("/Users/Nicklas/Skolan/ECA.FDB",res);
+        } catch (InfException e){}
     }
 
     public static void main(String[] args) {

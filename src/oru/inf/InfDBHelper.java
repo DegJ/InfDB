@@ -11,8 +11,16 @@ public final class InfDBHelper {
     // we cant instance this class
     }
 
-    static public HashMap<String, Object> getAdvanceMap(){
+    static public HashMap<String, Object> getAdvanceProperties(){
 
-        return new HashMap<>();
+        HashMap<String,Object> res=new HashMap<>();
+
+        res.put("EMBEDDED", new Boolean(false));
+        res.put("COLUMNLABELFORNAME", new Boolean(false));
+        res.put("USER", "SYSDBA");
+        res.put("PASSWORD", "masterkey");
+        res.put("HOST","LOCALHOST");
+
+        return res;
     }
 }

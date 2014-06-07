@@ -11,16 +11,20 @@ import java.util.*;
 public class InfDB {
     private Connection con;
     private String path;
+    private HashMap<String,Object> param;
+    private int advancedmode;
 
     /**
      * InfDB
      * Constructor for the DB class
+     * initiates a default connection to the database, with SQL AS statement on (columnLabelForName).
      *
      * @param path Path to the Firebird DB, for example C:/DB.FDB or for Mac /User/DB.FDB
      * @throws InfException If the DB connection couldn't be established.
      */
     public InfDB(String path) throws InfException {
         this.path = path;
+        advancedmode=0;
         try{
             initConnection();
         } catch (InfException e) {
@@ -28,22 +32,15 @@ public class InfDB {
         }
     }
 
-    public InfDB(String path, HashMap<String,Object> map) throws InfException {
+    public InfDB(String path, HashMap<String,Object> param) throws InfException {
         this.path = path;
+        this.param=param;
+        advancedmode=1;
         try {
-            initConnection(map);
+            initConnection(param);
         } catch (InfException e) {
             throw new InfException(e);
         }
-    }
-
-    public void testProp(){
-        Properties prop=new Properties();
-        Set<Object> a=prop.keySet();
-        for(Object o:a){
-            System.out.println(o);
-        }
-        System.out.println("a: "+prop);
     }
 
     /**
@@ -63,9 +60,16 @@ public class InfDB {
         }
     }
 
+    /**
+     * initConnection
+     * opens a connection to the database with advanced settings
+     * @param props
+     * @throws InfException
+     */
     private void initConnection(HashMap<String, Object> props) throws InfException {
         try {
-            if(props.containsKey("EMBEDDED")&&props.containsKey("COLUMNLABELFORNAME")){
+            boolean b=props.keySet().containsAll(InfDBHelper.getAdvanceProperties().keySet());
+            if(!b){
                 throw new InfException("Missing parameters from the map or the parameter list contains invalid data, instance defaults from InfDBHelper.getAdvanceMap()");
             }
             try {
@@ -100,8 +104,10 @@ public class InfDB {
      */
     private void checkConnection() throws InfException {
         try {
-            if (con == null || con.isClosed()) {
+            if (advancedmode==0 && con == null || con.isClosed()) {
                 initConnection();
+            } else if (advancedmode==1 && con == null || con.isClosed()) {
+                initConnection(param);
             }
         } catch (SQLException e) {
             throw new InfException("A checkConnection to the database failed");
