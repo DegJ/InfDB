@@ -14,7 +14,7 @@ public class Test {
 
     public Test() {
         try {
-            db = new InfDB("C:\\Skolan\\ECA.FDB");
+            db = new InfDB("/Users/Nicklas/Skolan/ECA.FDB");
             System.out.println("worked [from test.java]");
         } catch (InfException e) {
             e.printStackTrace();
@@ -109,10 +109,18 @@ public class Test {
         }
     }
     private void props(){
-        HashMap<String,Object> res=InfDBHelper.getAdvanceProperties();
+        HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
+        res.remove("USER");
         try {
             dba = new InfDB("/Users/Nicklas/Skolan/ECA.FDB",res);
-        } catch (InfException e){}
+        } catch (InfException e){
+            System.out.println("dint work db hm");
+        }
+        try{
+            System.out.println(dba.fetchSingle("Select namn from agent"));
+        } catch (InfException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

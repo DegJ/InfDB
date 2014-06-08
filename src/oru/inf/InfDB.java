@@ -1,4 +1,5 @@
 package oru.inf;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class InfDB {
 
     public InfDB(String path, HashMap<String,Object> param) throws InfException {
         this.path = path;
-        this.param=param;
+        this.param = param;
         advancedmode=1;
         try {
             initConnection(param);
@@ -63,17 +64,32 @@ public class InfDB {
     /**
      * initConnection
      * opens a connection to the database with advanced settings
-     * @param props
+     *
+     * @param params
      * @throws InfException
      */
-    private void initConnection(HashMap<String, Object> props) throws InfException {
+    private void initConnection(HashMap<String, Object> params) throws InfException {
         try {
-            boolean b=props.keySet().containsAll(InfDBHelper.getAdvanceProperties().keySet());
+            boolean b=params.keySet().containsAll(InfDBHelper.getAdvanceParams().keySet());
             if(!b){
-                throw new InfException("Missing parameters from the map or the parameter list contains invalid data, instance defaults from InfDBHelper.getAdvanceMap()");
+                throw new InfException("Missing parameters from the map, instance defaults from InfDBHelper.getAdvanceParams()");
             }
+
+            StringBuilder conBuilder=new StringBuilder();
+            conBuilder.append("jbdc:firebirdsql:");
+            if((Boolean)params.get("EMBEDDED")==true)conBuilder.append("embedded:");
+            conBuilder.append("//"+params.get("HOST"));
+
+            Properties props=new Properties();
+            props.setProperty("user",(String)params.get("USER"));
+            props.setProperty("password",(String)params.get("PASSWORD"));
+            props.setProperty("encoding",(String)params.get("ENCODING"));
+            if((Boolean)params.get("COLUMNLABELFORNAME")==true)props.setProperty("columnLabelForName","true");
+
+
             try {
                 Class.forName("org.firebirdsql.jdbc.FBDriver");
+                con = DriverManager.getConnection(conBuilder.toString(),props);
             } catch (ClassNotFoundException e) {
                 throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
             }
@@ -90,7 +106,7 @@ public class InfDB {
      */
     private void closeConnection() throws InfException {
         try {
-            con.close();
+            if(con!=null) con.close();
         } catch (SQLException e) {
             throw new InfException("Couldn't close the connection to the database");
         }

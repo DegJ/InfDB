@@ -11,16 +11,22 @@ public final class InfDBHelper {
     // we cant instance this class
     }
 
-    static public HashMap<String, Object> getAdvanceProperties(){
+    static public HashMap<String, Object> getAdvanceParams(){
 
         HashMap<String,Object> res=new HashMap<>();
 
         res.put("EMBEDDED", new Boolean(false));
-        res.put("COLUMNLABELFORNAME", new Boolean(false));
+        res.put("COLUMNLABELFORNAME", new Boolean(true));
+        res.put("ENCODING","UTF8");
         res.put("USER", "SYSDBA");
         res.put("PASSWORD", "masterkey");
-        res.put("HOST","LOCALHOST");
+        res.put("HOST","localhost:3050");
 
+        return res;
+    }
+
+    static public boolean advanceParmsCorrect(){
+        boolean res=false;
         return res;
     }
 }
