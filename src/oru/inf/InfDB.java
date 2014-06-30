@@ -1,5 +1,4 @@
 package oru.inf;
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
@@ -7,7 +6,7 @@ import java.util.*;
  * <b>Class managing the underlying database (Firebird).</b>
  * Created by Nicklas Magnusson on 2014-05-11. Project: InfDB
  * @author Nicklas Magnusson nicmav141@studentmail.oru.se
- * @version 0.1
+ * @version 0.2
  */
 public class InfDB {
     private Connection con;
@@ -87,7 +86,7 @@ public class InfDB {
         StringBuilder conBuilder=new StringBuilder();
         conBuilder.append("jdbc:firebirdsql:");
         if((Boolean) params.get("EMBEDDED"))conBuilder.append("embedded:");
-        conBuilder.append("//" + params.get("HOST") + "/").append(path);
+        conBuilder.append("//").append(params.get("HOST")).append("/").append(path);
 
         Properties props=new Properties();
         props.setProperty("user",(String)params.get("USER"));

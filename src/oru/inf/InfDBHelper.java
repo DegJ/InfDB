@@ -25,7 +25,7 @@ public final class InfDBHelper {
      */
     static public HashMap<String, Object> getAdvanceParams(){
 
-        HashMap<String,Object> res=new HashMap<>();
+        HashMap<String,Object> res=new HashMap<String,Object>();
 
         res.put("EMBEDDED", new Boolean(false));
         res.put("COLUMNLABELFORNAME", new Boolean(true));
