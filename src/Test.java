@@ -112,6 +112,7 @@ public class Test {
     private void props(){
         HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
         res.put("EMBEDDED", new Boolean(true));
+        res.put("USER",new HashMap<String,String>());
         try {
             dba = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB",res);
             System.out.println("wokred props db");

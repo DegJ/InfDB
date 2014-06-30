@@ -20,7 +20,7 @@ public final class InfDBHelper {
      * ENCODING, String(UTF8)
      * USER, String(SYSDBA)
      * PASSWORD, String(masterkey)
-     * HOST, String(localhost:3050)
+     * HOST, String(localhost:3050) (host:port)
      * @return HashMap with parameters
      */
     static public HashMap<String, Object> getAdvanceParams(){
@@ -48,6 +48,22 @@ public final class InfDBHelper {
         if(!b){
             throw new Exception("Missing parameters from the map, instance defaults from InfDBHelper.getAdvanceParams()");
         }
-        return b;
+
+        // basic check so the params are of the correct class
+
+        boolean emcheck=params.get("EMBEDDED") instanceof Boolean;
+        boolean clfncheck=params.get("COLUMNLABELFORNAME") instanceof Boolean;
+        boolean enccheck=params.get("ENCODING") instanceof String;
+        boolean ucheck=params.get("USER") instanceof String;
+        boolean pcheck=params.get("PASSWORD") instanceof String;
+        boolean hcheck=params.get("HOST") instanceof String;
+
+        boolean isok=emcheck&&clfncheck&&enccheck&&ucheck&&pcheck&&hcheck&&b;
+
+        if(!isok){
+            throw new Exception("Check the parameters, one or more is not correct");
+        }
+
+        return isok;
     }
 }
