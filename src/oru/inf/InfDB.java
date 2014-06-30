@@ -74,7 +74,7 @@ public class InfDB {
      * opens a connection to the database with advanced settings
      *
      * @param params the parameters used to connect to the database
-     * @throws InfException
+     * @throws InfException If the DB connection couldn't be established, the advanced parameters aren't correct, the path to the DB isn't correct or the drivers for the database (jaybird-full-XX.jar) isn't found an error is thrown.
      */
     private void initConnection(HashMap<String, Object> params) throws InfException {
         try {
