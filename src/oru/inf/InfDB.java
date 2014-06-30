@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * <p>Class managing the underlying database (Firebird).</p>
+ * <b>Class managing the underlying database (Firebird).</b>
  * Created by Nicklas Magnusson on 2014-05-11. Project: InfDB
  * @author Nicklas Magnusson nicmav141@studentmail.oru.se
  * @version 0.1
@@ -29,10 +29,19 @@ public class InfDB {
         try{
             initConnection();
         } catch (InfException e) {
-            throw new InfException(e);
+            throw e;
         }
     }
 
+    /**
+     * InfDB
+     * Constructor for the DB class
+     * initiates a non default connection to the database.
+     *
+     * @param path Path to the Firebird DB, for example C:/DB.FDB or for Mac /User/DB.FDB
+     * @param param Parameters used to establish a connection to the database (Use InfDBHelper getAdvanceParams())
+     * @throws InfException If the DB connection couldn't be established.
+     */
     public InfDB(String path, HashMap<String,Object> param) throws InfException {
         this.path = path;
         this.param = param;
@@ -40,7 +49,7 @@ public class InfDB {
         try {
             initConnection(param);
         } catch (InfException e) {
-            throw new InfException(e);
+            throw e;
         }
     }
 
@@ -65,37 +74,36 @@ public class InfDB {
      * initConnection
      * opens a connection to the database with advanced settings
      *
-     * @param params
+     * @param params the parameters used to connect to the database
      * @throws InfException
      */
     private void initConnection(HashMap<String, Object> params) throws InfException {
         try {
-            boolean b=params.keySet().containsAll(InfDBHelper.getAdvanceParams().keySet());
-            if(!b){
-                throw new InfException("Missing parameters from the map, instance defaults from InfDBHelper.getAdvanceParams()");
-            }
-
-            StringBuilder conBuilder=new StringBuilder();
-            conBuilder.append("jbdc:firebirdsql:");
-            if((Boolean)params.get("EMBEDDED")==true)conBuilder.append("embedded:");
-            conBuilder.append("//"+params.get("HOST"));
-
-            Properties props=new Properties();
-            props.setProperty("user",(String)params.get("USER"));
-            props.setProperty("password",(String)params.get("PASSWORD"));
-            props.setProperty("encoding",(String)params.get("ENCODING"));
-            if((Boolean)params.get("COLUMNLABELFORNAME")==true)props.setProperty("columnLabelForName","true");
-
-
-            try {
-                Class.forName("org.firebirdsql.jdbc.FBDriver");
-                con = DriverManager.getConnection(conBuilder.toString(),props);
-            } catch (ClassNotFoundException e) {
-                throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
-            }
-        } catch (Exception ex) {
-
+            InfDBHelper.advanceParmsCorrect(params);
+        } catch (Exception e){
+            throw new InfException(e);
         }
+
+        StringBuilder conBuilder=new StringBuilder();
+        conBuilder.append("jdbc:firebirdsql:");
+        if((Boolean) params.get("EMBEDDED"))conBuilder.append("embedded:");
+        conBuilder.append("//" + params.get("HOST") + "/").append(path);
+
+        Properties props=new Properties();
+        props.setProperty("user",(String)params.get("USER"));
+        props.setProperty("password",(String)params.get("PASSWORD"));
+        props.setProperty("encoding",(String)params.get("ENCODING"));
+        if((Boolean) params.get("COLUMNLABELFORNAME"))props.setProperty("columnLabelForName","true");
+
+        try {
+            Class.forName("org.firebirdsql.jdbc.FBDriver");
+            con = DriverManager.getConnection(conBuilder.toString(),props);
+        } catch (ClassNotFoundException e) {
+            throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
+        } catch (SQLException e) {
+            throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
+        }
+
     }
 
     /**
@@ -120,10 +128,12 @@ public class InfDB {
      */
     private void checkConnection() throws InfException {
         try {
-            if (advancedmode==0 && con == null || con.isClosed()) {
-                initConnection();
-            } else if (advancedmode==1 && con == null || con.isClosed()) {
-                initConnection(param);
+            if(con == null || con.isClosed()) {
+                if (advancedmode == 0) {
+                    initConnection();
+                } else if (advancedmode == 1) {
+                    initConnection(param);
+                }
             }
         } catch (SQLException e) {
             throw new InfException("A checkConnection to the database failed");

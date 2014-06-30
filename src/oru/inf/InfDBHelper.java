@@ -11,6 +11,18 @@ public final class InfDBHelper {
     // we cant instance this class
     }
 
+    /**
+     * Get a HashMap containing parameters that is used to connect to a firebird database a non-default way.
+     * Usage: .put with new value overriding old one.
+     * Parameters:
+     * EMBEDDED, Boolean(True|False)
+     * COLUMNLABELFORNAME, Boolean(True|False)
+     * ENCODING, String(UTF8)
+     * USER, String(SYSDBA)
+     * PASSWORD, String(masterkey)
+     * HOST, String(localhost:3050)
+     * @return HashMap with parameters
+     */
     static public HashMap<String, Object> getAdvanceParams(){
 
         HashMap<String,Object> res=new HashMap<>();
@@ -25,8 +37,17 @@ public final class InfDBHelper {
         return res;
     }
 
-    static public boolean advanceParmsCorrect(){
-        boolean res=false;
-        return res;
+    /**
+     * Checks if the params instanced from getAdvanceParams are there.
+     * @param params HashMap of params to check
+     * @return boolean true if they were all there and were alright
+     * @throws Exception if they weren't there
+     */
+    static public boolean advanceParmsCorrect(HashMap<String, Object> params) throws Exception{
+        boolean b=params.keySet().containsAll(InfDBHelper.getAdvanceParams().keySet());
+        if(!b){
+            throw new Exception("Missing parameters from the map, instance defaults from InfDBHelper.getAdvanceParams()");
+        }
+        return b;
     }
 }

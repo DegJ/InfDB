@@ -14,7 +14,7 @@ public class Test {
 
     public Test() {
         try {
-            db = new InfDB("/Users/Nicklas/Skolan/ECA.FDB");
+            db = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB");
             System.out.println("worked [from test.java]");
         } catch (InfException e) {
             e.printStackTrace();
@@ -108,18 +108,33 @@ public class Test {
             e.printStackTrace();
         }
     }
+
     private void props(){
         HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
-        res.remove("USER");
+        res.put("EMBEDDED", new Boolean(true));
         try {
-            dba = new InfDB("/Users/Nicklas/Skolan/ECA.FDB",res);
+            dba = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB",res);
+            System.out.println("wokred props db");
         } catch (InfException e){
-            System.out.println("dint work db hm");
+            System.out.println(e);
         }
         try{
             System.out.println(dba.fetchSingle("Select namn from agent"));
         } catch (InfException e) {
             e.printStackTrace();
+        }
+
+        ArrayList<HashMap<String, String>> alhm = new ArrayList<HashMap<String, String>>();
+        try {
+            alhm = dba.fetchRows("select * from agent");
+        } catch (InfException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < alhm.size(); i++) {
+            HashMap<String, String> hm = alhm.get(i);
+            for (String e : hm.values()) {
+                System.out.println(e);
+            }
         }
     }
 
