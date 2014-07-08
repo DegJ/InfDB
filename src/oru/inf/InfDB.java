@@ -63,7 +63,7 @@ public class InfDB {
             Class.forName("org.firebirdsql.jdbc.FBDriver");
             con = DriverManager.getConnection("jdbc:firebirdsql://localhost:3050/" + this.path +"?columnLabelForName=true", "SYSDBA", "masterkey");
         } catch (ClassNotFoundException e) {
-            throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
+            throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar)");
         } catch (SQLException e) {
             throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
         }

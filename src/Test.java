@@ -111,13 +111,13 @@ public class Test {
 
     private void props(){
         HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
-        res.put("EMBEDDED", new Boolean(true));
-        res.put("USER",new HashMap<String,String>());
+        res.put("EMBEDDED", new Boolean(false));
+        //res.put("USER",new HashMap<String,String>());
         try {
             dba = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB",res);
             System.out.println("wokred props db");
         } catch (InfException e){
-            System.out.println(e);
+            System.out.println("abc + "+e);
         }
         try{
             System.out.println(dba.fetchSingle("Select namn from agent"));
@@ -141,8 +141,7 @@ public class Test {
 
     public static void main(String[] args) {
         Test something = new Test();
-        something.props();
-        /*
+
         something.testFetchSingle();
         something.testFetchColumn();
         something.testFetchRow();
@@ -151,8 +150,7 @@ public class Test {
         something.testInsert();
         something.testDelete();
         something.testUpdate();
-*/
-
+        something.props();
     }
 
 
