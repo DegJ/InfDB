@@ -24,9 +24,9 @@ public class InfDB {
      */
     public InfDB(String path) throws InfException {
         this.path = path;
-        advancedmode=0;
-        try{
-            initConnection();
+        advancedmode = 0;
+        try {
+            loadDriver();
         } catch (InfException e) {
             throw e;
         }
@@ -46,9 +46,21 @@ public class InfDB {
         this.param = param;
         advancedmode=1;
         try {
-            initConnection(param);
+            loadDriver();
         } catch (InfException e) {
             throw e;
+        }
+    }
+
+    /**
+     * loads the driver for jdbc, the firebird database drivers.
+     * @throws InfException if we dint find the driver in path.
+     */
+    private void loadDriver() throws InfException{
+        try {
+            Class.forName("org.firebirdsql.jdbc.FBDriver");
+        } catch (ClassNotFoundException e) {
+            throw new InfException("Class/driver not found, add the library for Firebird in your current path (jaybird-full-XX.jar)");
         }
     }
 
@@ -60,10 +72,7 @@ public class InfDB {
      */
     private void initConnection() throws InfException {
         try {
-            Class.forName("org.firebirdsql.jdbc.FBDriver");
             con = DriverManager.getConnection("jdbc:firebirdsql://localhost:3050/" + this.path +"?columnLabelForName=true", "SYSDBA", "masterkey");
-        } catch (ClassNotFoundException e) {
-            throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar)");
         } catch (SQLException e) {
             throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
         }
@@ -86,7 +95,11 @@ public class InfDB {
         StringBuilder conBuilder=new StringBuilder();
         conBuilder.append("jdbc:firebirdsql:");
         if((Boolean) params.get("EMBEDDED"))conBuilder.append("embedded:");
-        conBuilder.append("//").append(params.get("HOST")).append("/").append(path);
+        if(!(Boolean) params.get("EMBEDDED")){
+            conBuilder.append("//").append(params.get("HOST")).append("/").append(path);
+        } else {
+            conBuilder.append(path);
+        }
 
         Properties props=new Properties();
         props.setProperty("user",(String)params.get("USER"));
@@ -95,10 +108,7 @@ public class InfDB {
         if((Boolean) params.get("COLUMNLABELFORNAME"))props.setProperty("columnLabelForName","true");
 
         try {
-            Class.forName("org.firebirdsql.jdbc.FBDriver");
             con = DriverManager.getConnection(conBuilder.toString(),props);
-        } catch (ClassNotFoundException e) {
-            throw new InfException("Class/driver not found, add the library for Firebird (Jaybird-full-XX.jar");
         } catch (SQLException e) {
             throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
         }

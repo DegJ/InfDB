@@ -4,6 +4,7 @@ import oru.inf.InfException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * Created by Nicklas on 2014-05-11.
@@ -111,7 +112,7 @@ public class Test {
 
     private void props(){
         HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
-        res.put("EMBEDDED", new Boolean(false));
+        res.put("EMBEDDED", new Boolean(true));
         //res.put("USER",new HashMap<String,String>());
         try {
             dba = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB",res);
@@ -141,8 +142,8 @@ public class Test {
 
     public static void main(String[] args) {
         Test something = new Test();
-
         something.testFetchSingle();
+        /*
         something.testFetchColumn();
         something.testFetchRow();
         something.testFetchRows();
@@ -150,8 +151,23 @@ public class Test {
         something.testInsert();
         something.testDelete();
         something.testUpdate();
+        */
+
+        /*
+        Properties p = System.getProperties();
+
+        java.util.Enumeration keys = p.keys();
+        while (keys.hasMoreElements()) {
+            String key = (String)keys.nextElement();
+            String value = (String)p.get(key);
+            System.out.println(key + ": " + value);
+        }
+        */
         something.props();
     }
 
 
 }
+/*
+http://stackoverflow.com/questions/5419039/is-djava-library-path-equivalent-to-system-setpropertyjava-library-path
+ */
