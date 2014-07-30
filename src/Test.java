@@ -2,6 +2,10 @@ import oru.inf.InfDB;
 import oru.inf.InfDBHelper;
 import oru.inf.InfException;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -140,6 +144,44 @@ public class Test {
         }
     }
 
+    public void rstest(){
+        ResultSet results= null;
+        try {
+            results=db.getResultSet("select * from agent");
+        } catch (InfException e) {
+            e.printStackTrace();
+        }
+        if (results != null) {
+            try {
+                ResultSetMetaData rsmd = results.getMetaData();
+                int countColumns = rsmd.getColumnCount();
+
+                int a=results.getRow();
+                String b=results.getCursorName();
+                results.next();
+                int d=results.getRow();
+
+                String c=results.getString(2);
+                results.updateString(2,c+"2");
+                String e=results.getString(2);
+                results.refreshRow();
+                String f=results.getString(2);
+                results.updateString(2,c+"2");
+                String g=results.getString(2);
+                results.updateRow();
+                results.absolute(3);
+                String h=results.getString(2);
+                results.previous();
+                String i=results.getString(2);
+                String j=results.getCursorName();
+
+                String x=null;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Test something = new Test();
         something.testFetchSingle();
@@ -163,9 +205,12 @@ public class Test {
             System.out.println(key + ": " + value);
         }
         */
+        something.rstest();
+        /*
         System.out.println("----");
         System.out.println(System.getProperties().getProperty ("jdbc.drivers"));
         something.props();
+        */
     }
 
 

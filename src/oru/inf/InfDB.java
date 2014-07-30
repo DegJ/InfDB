@@ -392,4 +392,34 @@ public class InfDB {
         } else throw new InfException("Not valid UPDATE query - check your query");
     }
 
+    /**
+     * Get a ResultSet of the query.
+     * you must be in advanced mode to use this, connecting using InfDBHelper getAdvanceParams()
+     * How to use: see Java API docs: http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html
+     * Hints:
+     * cursor moves: next(), previous(), absolute(**index**).
+     * getters: getString(**columnindex**), getInt(**columnindex**)
+     * updates: updateRow(), updateInt(), updateString().
+     * inserts: moveToInsertRow(), insertRow(). // after updating values with updates
+     * deletes: deleteRow()
+     * @param query the SQL query
+     * @return ResultSet with the results of the query
+     * @throws InfException If something went wrong with the query.
+     */
+    public ResultSet getResultSet(String query) throws InfException {
+        if(advancedmode!=1)throw new InfException("To use getResultSet() you must use the advanced connection parameters");
+        ResultSet rs=null;
+        try {
+            checkConnection();
+            Statement sm = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            boolean hasRS = sm.execute(query);
+            if (hasRS) {
+                rs = sm.getResultSet();
+            }
+        } catch (SQLException e) {
+            throw new InfException("Getting the ResultSet didn't work - check your query");
+        }
+        return rs;
+    }
+
 }
