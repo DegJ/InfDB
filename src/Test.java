@@ -112,13 +112,13 @@ public class Test {
 
     private void props(){
         HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
-        res.put("EMBEDDED", new Boolean(true));
+        res.put("EMBEDDED", new Boolean(false));
         //res.put("USER",new HashMap<String,String>());
         try {
             dba = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB",res);
             System.out.println("wokred props db");
         } catch (InfException e){
-            System.out.println("abc + "+e);
+            System.out.println("props()  + "+e);
         }
         try{
             System.out.println(dba.fetchSingle("Select namn from agent"));
@@ -163,6 +163,8 @@ public class Test {
             System.out.println(key + ": " + value);
         }
         */
+        System.out.println("----");
+        System.out.println(System.getProperties().getProperty ("jdbc.drivers"));
         something.props();
     }
 
@@ -170,4 +172,7 @@ public class Test {
 }
 /*
 http://stackoverflow.com/questions/5419039/is-djava-library-path-equivalent-to-system-setpropertyjava-library-path
+ */
+/*
+@todo return ResultSet method
  */

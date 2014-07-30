@@ -25,11 +25,13 @@ public class InfDB {
     public InfDB(String path) throws InfException {
         this.path = path;
         advancedmode = 0;
+
         try {
             loadDriver();
         } catch (InfException e) {
             throw e;
         }
+
     }
 
     /**
@@ -45,16 +47,18 @@ public class InfDB {
         this.path = path;
         this.param = param;
         advancedmode=1;
+
         try {
             loadDriver();
         } catch (InfException e) {
             throw e;
         }
+
     }
 
     /**
      * loads the driver for jdbc, the firebird database drivers.
-     * @throws InfException if we dint find the driver in path.
+     * @throws InfException if we dint find the driver in java.library.path.
      */
     private void loadDriver() throws InfException{
         try {
@@ -283,13 +287,13 @@ public class InfDB {
      * by replicating the letters and counting the number upwards.
      *
      * @param table    The table where the number(ID) is located
-     * @param attribut The column name in the table of the number(ID)
+     * @param attribute The column name in the table of the number(ID)
      * @return returns the number(ID) +1
      * @throws InfException If the query didn't work or a column contains something else than numbers or letters+numbers an error is thrown.
      */
-    public String getAutoIncrement(String table, String attribut) throws InfException {
+    public String getAutoIncrement(String table, String attribute) throws InfException {
         String result = null;
-        String query = "SELECT " + attribut + " FROM " + table + " ORDER BY " + attribut + " DESC";
+        String query = "SELECT " + attribute + " FROM " + table + " ORDER BY " + attribute + " DESC";
         try {
             checkConnection();
             Statement sm = con.createStatement();
