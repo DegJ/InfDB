@@ -116,7 +116,7 @@ public class Test {
 
     private void props(){
         HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
-        res.put("EMBEDDED", new Boolean(false));
+        res.put("EMBEDDED", new Boolean(true));
         //res.put("USER",new HashMap<String,String>());
         try {
             dba = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB",res);
@@ -206,10 +206,11 @@ public class Test {
         }
         */
         something.rstest();
+        something.props();
         /*
         System.out.println("----");
         System.out.println(System.getProperties().getProperty ("jdbc.drivers"));
-        something.props();
+
         */
     }
 

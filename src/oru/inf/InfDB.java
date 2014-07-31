@@ -393,7 +393,7 @@ public class InfDB {
     }
 
     /**
-     * Get a ResultSet of the query.
+     * Get a ResultSet of the query. The ResultSet is scroll insensitive and is updatable.
      * you must be in advanced mode to use this, connecting using InfDBHelper getAdvanceParams()
      * How to use: see Java API docs: http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html
      * Hints:
