@@ -28,6 +28,7 @@ public class InfDB {
 
         try {
             loadDriver();
+            initConnection();
         } catch (InfException e) {
             throw e;
         }
@@ -50,6 +51,7 @@ public class InfDB {
 
         try {
             loadDriver();
+            initConnection(param);
         } catch (InfException e) {
             throw e;
         }
@@ -98,12 +100,16 @@ public class InfDB {
 
         StringBuilder conBuilder=new StringBuilder();
         conBuilder.append("jdbc:firebirdsql:");
+        conBuilder.append("//").append(params.get("HOST")).append("/").append(path);
+
+        /* embedded code, commented out until i can figure out how the f* to get embedded to work
         if((Boolean) params.get("EMBEDDED"))conBuilder.append("embedded:");
         if(!(Boolean) params.get("EMBEDDED")){
             conBuilder.append("//").append(params.get("HOST")).append("/").append(path);
         } else {
             conBuilder.append(path);
         }
+        */
 
         Properties props=new Properties();
         props.setProperty("user",(String)params.get("USER"));
@@ -402,6 +408,7 @@ public class InfDB {
      * updates: updateRow(), updateInt(), updateString().
      * inserts: moveToInsertRow(), insertRow(). // after updating values with updates
      * deletes: deleteRow()
+     * Will return null if no results could be found with the query.
      * @param query the SQL query
      * @return ResultSet with the results of the query
      * @throws InfException If something went wrong with the query.

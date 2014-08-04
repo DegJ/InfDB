@@ -27,7 +27,7 @@ public final class InfDBHelper {
 
         HashMap<String,Object> res=new HashMap<String,Object>();
 
-        res.put("EMBEDDED", new Boolean(false));
+        //res.put("EMBEDDED", new Boolean(false));
         res.put("COLUMNLABELFORNAME", new Boolean(true));
         res.put("ENCODING","UTF8");
         res.put("USER", "SYSDBA");
@@ -51,14 +51,14 @@ public final class InfDBHelper {
 
         // basic check so the params are of the correct class
 
-        boolean emcheck=params.get("EMBEDDED") instanceof Boolean;
+        //boolean emcheck=params.get("EMBEDDED") instanceof Boolean;
         boolean clfncheck=params.get("COLUMNLABELFORNAME") instanceof Boolean;
         boolean enccheck=params.get("ENCODING") instanceof String;
         boolean ucheck=params.get("USER") instanceof String;
         boolean pcheck=params.get("PASSWORD") instanceof String;
         boolean hcheck=params.get("HOST") instanceof String;
 
-        boolean isok=emcheck&&clfncheck&&enccheck&&ucheck&&pcheck&&hcheck&&b;
+        boolean isok=clfncheck&&enccheck&&ucheck&&pcheck&&hcheck&&b;
 
         if(!isok){
             throw new Exception("Check the parameters, one or more is not correct");
