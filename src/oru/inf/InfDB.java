@@ -18,6 +18,10 @@ public class InfDB {
      * InfDB
      * Constructor for the DB class
      * initiates a default connection to the database, with SQL AS statement on (columnLabelForName).
+     * <p>
+     * Example:<br>
+     *     private InfDB db;<br>
+     *     db = new InfDB("path/to/db.fdb");
      *
      * @param path Path to the Firebird DB, for example C:/DB.FDB or for Mac /User/DB.FDB
      * @throws InfException If the DB connection couldn't be established.
@@ -39,6 +43,11 @@ public class InfDB {
      * InfDB
      * Constructor for the DB class
      * initiates a non default connection to the database.
+     * <p>
+     * Example:<br>
+     *     private InfDB dba;<br>
+     *     HashMap options = InfDBHelper.getAdvanceParams();<br>
+     *     dba = new InfDB("path/to/db.fdb", options);
      *
      * @param path Path to the Firebird DB, for example C:/DB.FDB or for Mac /User/DB.FDB
      * @param param Parameters used to establish a connection to the database (Use InfDBHelper getAdvanceParams())
@@ -59,7 +68,7 @@ public class InfDB {
     }
 
     /**
-     * loads the driver for jdbc, the firebird database drivers.
+     * Loads the driver for jdbc, the firebird database drivers.
      * @throws InfException if we dint find the driver in java.library.path.
      */
     private void loadDriver() throws InfException{
@@ -71,8 +80,7 @@ public class InfDB {
     }
 
     /**
-     * initConnection
-     * opens a connection to the DB
+     * Opens a connection to the DB
      *
      * @throws InfException If the DB connection couldn't be established, the path to the DB isn't correct or the drivers for the database (jaybird-full-XX.jar) isn't found an error is thrown.
      */
@@ -85,8 +93,7 @@ public class InfDB {
     }
 
     /**
-     * initConnection
-     * opens a connection to the database with advanced settings
+     * Opens a connection to the database with advanced settings
      *
      * @param params the parameters used to connect to the database
      * @throws InfException If the DB connection couldn't be established, the advanced parameters aren't correct, the path to the DB isn't correct or the drivers for the database (jaybird-full-XX.jar) isn't found an error is thrown.
@@ -126,8 +133,7 @@ public class InfDB {
     }
 
     /**
-     * closeConnection
-     * closes the DB connection
+     * Closes the DB connection
      *
      * @throws InfException If DB connection couldn't be closed an error is thrown.
      */
@@ -140,8 +146,7 @@ public class InfDB {
     }
 
     /**
-     * checkConnection
-     * checks if the DB connection is closed and if so initiates it
+     * Checks if the DB connection is closed and if so initiates it
      *
      * @throws InfException if the check failed
      */
@@ -160,9 +165,10 @@ public class InfDB {
     }
 
     /**
-     * fetchSingle
-     * fetches a single value from the DB, if the query returns several values, the first one is selected.
-     *
+     * Fetches a single value from the DB, if the query returns several values, the first one is selected.
+     * <p>
+     * Example:<br>
+     *     String name = db.fetchSingle("select name from agent where id=1");
      * @param query SQL query for the DB
      * @return a String containing the value.
      * @throws InfException If the query doesn't work an error is thrown.
@@ -188,9 +194,10 @@ public class InfDB {
     }
 
     /**
-     * fetchColumn
-     * fetches a column from the DB, if the query returns several columns, the first one is selected.
-     *
+     * Fetches a column from the DB, if the query returns several columns, the first one is selected.
+     * <p>
+     *     Example:<br>
+     *         ArrayList&lt;String&gt; names = db.fetchColumn("select name from agent");
      * @param query SQL query for the DB
      * @return An ArrayList containing the columns row values.
      * @throws InfException If the query doesn't work an error is thrown.
@@ -202,9 +209,7 @@ public class InfDB {
             Statement sm = con.createStatement();
             ResultSet rs = sm.executeQuery(query);
             while (rs.next()) {
-                if (result == null) {
-                    result = new ArrayList<String>();
-                }
+                result = new ArrayList<String>();
                 result.add(rs.getString(1));
             }
         } catch (SQLException e) {
@@ -216,9 +221,10 @@ public class InfDB {
     }
 
     /**
-     * fetchRow
-     * fetches one row from the DB, if the query has several rows the first one is selected.
-     *
+     * Fetches one row from the DB, if the query has several rows the first one is selected.
+     * <p>
+     *     Example:<br>
+     *         HashMap&lt;String,String&gt; agent = db.fetchRow("select * from agent where id=1");
      * @param query SQL query for the DB
      * @return A HashMap containing the rows values with the columns "name" as their key.
      * @throws InfException If the query doesn't work an error is thrown.
@@ -248,10 +254,11 @@ public class InfDB {
     }
 
     /**
-     * fetchRows
-     * fetches 1 to N number of rows from the DB into an ArrayList of HashMaps
+     * Fetches 1 to N number of rows from the DB into an ArrayList of HashMaps
      * where the ArrayList index is the row and the HashMap contains the rows values with the columns "NAME" as its key.
-     *
+     * <p>
+     *     Example:<br>
+     *         ArrayList&lt;HashMap&lt;String,String&gt;&gt; allAgents = db.fetchRows("select * from agent");
      * @param query SQL query for the DB
      * @return An ArrayList of HashMaps where the ArrayList is the rows number and the HashMap the rows values with the columns "name" as their key.
      * @throws InfException If the query doesn't work an error is thrown.
@@ -285,11 +292,12 @@ public class InfDB {
     }
 
     /**
-     * getAutoIncrement
      * Retrieves and counts a number upwards for a column that contains Integers,
      * to simulate an incrementing number. Also works on columns containing letters+numbers(or numbers+letters)
      * by replicating the letters and counting the number upwards.
-     *
+     * <p>
+     *     Example:<br>
+     *         int nextId = db.getAutoIncrement("agent","id");
      * @param table    The table where the number(ID) is located
      * @param attribute The column name in the table of the number(ID)
      * @return returns the number(ID) +1
@@ -339,7 +347,6 @@ public class InfDB {
     }
 
     /**
-     * mod
      * Modifies the DB with any SQL DDL or SQL DML INSERT, UPDATE, DELETE
      *
      * @param query SQL query for the DB
@@ -358,9 +365,10 @@ public class InfDB {
     }
 
     /**
-     * insert
-     * Inserting a row into the DB using SQL syntax INSERT INTO
-     *
+     * Inserting a row into the DB using SQL syntax INSERT INTO.
+     * <p>
+     *     Example:<br>
+     *         db.insert("insert into agent values(1,'Mr Wiggles')");
      * @param query SQL query for the DB
      * @throws InfException If insert isn't correctly formatted throws an error
      */
@@ -371,9 +379,10 @@ public class InfDB {
     }
 
     /**
-     * delete
-     * Deleting a row from the DB using SQL syntax DELETE FROM
-     *
+     * Deleting a row from the DB using SQL syntax DELETE FROM.
+     * <p>
+     *     Example:<br>
+     *         db.delete("delete from agent where id=1");
      * @param query SQL query for the DB
      * @throws InfException If delete isn't correctly formatted throws an error
      */
@@ -384,9 +393,10 @@ public class InfDB {
     }
 
     /**
-     * update
      * Updating a row or value in the DB using SQL syntax UPDATE ... SET
-     *
+     * <p>
+     *     Example:<br>
+     *         db.update("update agent set name='Scooter the Snail' where id=1");
      * @param query SQL query for the DB
      * @throws InfException If update isn't correctly formatted throws an error
      */
@@ -399,15 +409,16 @@ public class InfDB {
     /**
      * Get a ResultSet of the query. The ResultSet is scroll insensitive and is updatable.<br>
      * You must be in advanced mode to use this, connecting using InfDBHelper getAdvanceParams()<br>
+     * Will return null if no results could be found with the query.<br>
+     * Doesn't close the database connection after the ResultSet is returned.<br>
      * How to use: see Java API docs: http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html<br>
+     * <p>
      * Hints/examples:<br>
      * cursor moves: next(), previous(), absolute(**index**).<br>
      * getters: getString(**columnindex**), getInt(**columnindex**)<br>
      * updates: updateRow(), updateInt(), updateString().<br>
      * inserts: moveToInsertRow(), insertRow(). // after updating values with updates<br>
      * deletes: deleteRow()<br>
-     * Will return null if no results could be found with the query.<br>
-     * Doesn't close the database connection after the ResultSet is returned.<br>
      * @param query the SQL query
      * @return ResultSet with the results of the query
      * @throws InfException if something went wrong with the query.

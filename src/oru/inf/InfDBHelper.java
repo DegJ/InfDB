@@ -15,13 +15,14 @@ public final class InfDBHelper {
     }
 
     /**
-     * Get a HashMap containing parameters that is used to connect to a firebird database a non-default way.
-     * Usage: .put with new value overriding old one.
-     * Parameters:
-     * COLUMNLABELFORNAME, Boolean(True|False)
-     * ENCODING, String(UTF8)
-     * USER, String(SYSDBA)
-     * PASSWORD, String(masterkey)
+     * Get a HashMap containing parameters that is used to connect to a firebird database a non-default way.<br>
+     * Usage: .put with new value overriding old one. <br>
+     * <p>
+     * Parameters:<br>
+     * COLUMNLABELFORNAME, Boolean(True|False)<br>
+     * ENCODING, String(UTF8)<br>
+     * USER, String(SYSDBA)<br>
+     * PASSWORD, String(masterkey)<br>
      * HOST, String(localhost:3050) (host:port)
      * @return HashMap with parameters
      */
