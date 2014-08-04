@@ -4,7 +4,6 @@ import oru.inf.InfException;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.RowId;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
