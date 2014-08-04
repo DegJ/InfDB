@@ -250,7 +250,7 @@ public class InfDB {
     /**
      * fetchRows
      * fetches 1 to N number of rows from the DB into an ArrayList of HashMaps
-     * where the ArrayList index is the row and the HashMap contains the rows values with the columns "name" as its key.
+     * where the ArrayList index is the row and the HashMap contains the rows values with the columns "NAME" as its key.
      *
      * @param query SQL query for the DB
      * @return An ArrayList of HashMaps where the ArrayList is the rows number and the HashMap the rows values with the columns "name" as their key.
