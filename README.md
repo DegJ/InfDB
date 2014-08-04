@@ -15,4 +15,4 @@ example: private InfDB db;
 
 Use the javadoc in javadoc.zip for reference to how the methods work.
 Javadoc avalible online at:
-http://degj.github.io/InfDB/jdoc/
+http://degj.github.io/InfDB/
