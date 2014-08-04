@@ -143,7 +143,7 @@ public class InfDB {
      * checkConnection
      * checks if the DB connection is closed and if so initiates it
      *
-     * @throws InfException
+     * @throws InfException if the check failed
      */
     private void checkConnection() throws InfException {
         try {
@@ -402,16 +402,17 @@ public class InfDB {
      * Get a ResultSet of the query. The ResultSet is scroll insensitive and is updatable.
      * you must be in advanced mode to use this, connecting using InfDBHelper getAdvanceParams()
      * How to use: see Java API docs: http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html
-     * Hints:
+     * Hints/examples:
      * cursor moves: next(), previous(), absolute(**index**).
      * getters: getString(**columnindex**), getInt(**columnindex**)
      * updates: updateRow(), updateInt(), updateString().
      * inserts: moveToInsertRow(), insertRow(). // after updating values with updates
      * deletes: deleteRow()
      * Will return null if no results could be found with the query.
+     * Doesn't close the database connection after the ResultSet is returned.
      * @param query the SQL query
      * @return ResultSet with the results of the query
-     * @throws InfException If something went wrong with the query.
+     * @throws InfException if something went wrong with the query.
      */
     public ResultSet getResultSet(String query) throws InfException {
         if(advancedmode!=1)throw new InfException("To use getResultSet() you must use the advanced connection parameters");

@@ -11,6 +11,7 @@ import java.util.Properties;
 
 /**
  * Created by Nicklas on 2014-05-11.
+ * test file for the database class
  */
 public class Test {
     private InfDB db;

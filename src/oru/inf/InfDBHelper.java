@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 /**
  * Created by Nicklas on 2014-06-05. Project: InfDB.
+ * Helper class for InfDB, used to get the advanced parameters when connecting to the firebird database.
+ * @author Nicklas Magnusson nicmav141@studentmail.oru.se
+ * @version 0.1
  */
 public final class InfDBHelper {
 
@@ -15,7 +18,6 @@ public final class InfDBHelper {
      * Get a HashMap containing parameters that is used to connect to a firebird database a non-default way.
      * Usage: .put with new value overriding old one.
      * Parameters:
-     * EMBEDDED, Boolean(True|False)
      * COLUMNLABELFORNAME, Boolean(True|False)
      * ENCODING, String(UTF8)
      * USER, String(SYSDBA)
