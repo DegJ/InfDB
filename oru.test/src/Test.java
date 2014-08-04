@@ -206,7 +206,7 @@ public class Test {
         }
         */
         something.rstest();
-        something.props();
+        //something.props();
         /*
         System.out.println("----");
         System.out.println(System.getProperties().getProperty ("jdbc.drivers"));

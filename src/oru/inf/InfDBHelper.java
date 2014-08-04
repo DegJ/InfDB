@@ -3,8 +3,8 @@ package oru.inf;
 import java.util.HashMap;
 
 /**
+ * <b>Helper class for InfDB, used to get the advanced parameters when connecting to the firebird database.</b>
  * Created by Nicklas on 2014-06-05. Project: InfDB.
- * Helper class for InfDB, used to get the advanced parameters when connecting to the firebird database.
  * @author Nicklas Magnusson nicmav141@studentmail.oru.se
  * @version 0.1
  */

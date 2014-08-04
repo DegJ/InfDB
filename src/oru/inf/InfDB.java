@@ -233,9 +233,7 @@ public class InfDB {
             int countColumns = rsmd.getColumnCount();
             int i = 1;
             if (rs.next()) {
-                if (result == null) {
-                    result = new HashMap<String, String>();
-                }
+                result = new HashMap<String, String>();
                 while (i <= countColumns) {
                     result.put(rsmd.getColumnName(i), rs.getString(i));
                     i++;
@@ -310,11 +308,11 @@ public class InfDB {
                     String[] ar = inc.split("");
                     String letters = "";
                     String numbers = "";
-                    for (int i = 0; i < ar.length; i++) {
-                        if (ar[i].matches("\\D")) {
-                            letters += ar[i];
-                        } else if (ar[i].matches("\\d")) {
-                            numbers += ar[i];
+                    for (String anAr : ar) {
+                        if (anAr.matches("\\D")) {
+                            letters += anAr;
+                        } else if (anAr.matches("\\d")) {
+                            numbers += anAr;
                         }
                     }
                     if (numbers.matches("\\d+")) {
