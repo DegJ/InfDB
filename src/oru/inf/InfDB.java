@@ -287,7 +287,7 @@ public class InfDB {
     /**
      * getAutoIncrement
      * Retrieves and counts a number upwards for a column that contains Integers,
-     * to simulate an incrementing number. Also works on columns containing letters+numbers(or numbers+letters),
+     * to simulate an incrementing number. Also works on columns containing letters+numbers(or numbers+letters)
      * by replicating the letters and counting the number upwards.
      *
      * @param table    The table where the number(ID) is located
@@ -397,17 +397,17 @@ public class InfDB {
     }
 
     /**
-     * Get a ResultSet of the query. The ResultSet is scroll insensitive and is updatable.
-     * you must be in advanced mode to use this, connecting using InfDBHelper getAdvanceParams()
-     * How to use: see Java API docs: http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html
-     * Hints/examples:
-     * cursor moves: next(), previous(), absolute(**index**).
-     * getters: getString(**columnindex**), getInt(**columnindex**)
-     * updates: updateRow(), updateInt(), updateString().
-     * inserts: moveToInsertRow(), insertRow(). // after updating values with updates
-     * deletes: deleteRow()
-     * Will return null if no results could be found with the query.
-     * Doesn't close the database connection after the ResultSet is returned.
+     * Get a ResultSet of the query. The ResultSet is scroll insensitive and is updatable.<br>
+     * You must be in advanced mode to use this, connecting using InfDBHelper getAdvanceParams()<br>
+     * How to use: see Java API docs: http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html<br>
+     * Hints/examples:<br>
+     * cursor moves: next(), previous(), absolute(**index**).<br>
+     * getters: getString(**columnindex**), getInt(**columnindex**)<br>
+     * updates: updateRow(), updateInt(), updateString().<br>
+     * inserts: moveToInsertRow(), insertRow(). // after updating values with updates<br>
+     * deletes: deleteRow()<br>
+     * Will return null if no results could be found with the query.<br>
+     * Doesn't close the database connection after the ResultSet is returned.<br>
      * @param query the SQL query
      * @return ResultSet with the results of the query
      * @throws InfException if something went wrong with the query.
