@@ -2,6 +2,7 @@ import oru.inf.InfDB;
 import oru.inf.InfDBHelper;
 import oru.inf.InfException;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -116,7 +117,7 @@ public class Test {
 
     private void props(){
         HashMap<String,Object> res=InfDBHelper.getAdvanceParams();
-        res.put("EMBEDDED", new Boolean(true));
+        //res.put("USER", new Boolean(false));
         //res.put("USER",new HashMap<String,String>());
         try {
             dba = new InfDB("/Users/Nicklas/Skolan/INFA/SUP/ECA.FDB",res);
@@ -147,7 +148,7 @@ public class Test {
     public void rstest(){
         ResultSet results= null;
         try {
-            results=db.getResultSet("select * from agent");
+            results=dba.getResultSet("select * from agent");
         } catch (InfException e) {
             e.printStackTrace();
         }
@@ -168,13 +169,14 @@ public class Test {
                 String f=results.getString(2);
                 results.updateString(2,c+"2");
                 String g=results.getString(2);
+                Connection con=results.getStatement().getConnection();
                 results.updateRow();
                 results.absolute(3);
                 String h=results.getString(2);
                 results.previous();
                 String i=results.getString(2);
                 String j=results.getCursorName();
-
+                System.out.println("ni hao: "+i+" ; :g:"+g);
                 String x=null;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -184,7 +186,8 @@ public class Test {
 
     public static void main(String[] args) {
         Test something = new Test();
-        something.testFetchSingle();
+        //something.testFetchSingle();
+        something.testFetchColumn();
         /*
         something.testFetchColumn();
         something.testFetchRow();
@@ -205,8 +208,9 @@ public class Test {
             System.out.println(key + ": " + value);
         }
         */
+        something.props();
         something.rstest();
-        //something.props();
+
         /*
         System.out.println("----");
         System.out.println(System.getProperties().getProperty ("jdbc.drivers"));

@@ -46,7 +46,7 @@ public class InfDB {
      * <p>
      * Example:<br>
      *     private InfDB dba;<br>
-     *     HashMap options = InfDBHelper.getAdvanceParams();<br>
+     *     HashMap&lt;String,Object&gt; options = InfDBHelper.getAdvanceParams();<br>
      *     dba = new InfDB("path/to/db.fdb", options);
      *
      * @param path Path to the Firebird DB, for example C:/DB.FDB or for Mac /User/DB.FDB
@@ -60,7 +60,7 @@ public class InfDB {
 
         try {
             loadDriver();
-            initConnection(param);
+            initConnection();
         } catch (InfException e) {
             throw e;
         }
@@ -85,29 +85,37 @@ public class InfDB {
      * @throws InfException If the DB connection couldn't be established, the path to the DB isn't correct or the drivers for the database (jaybird-full-XX.jar) isn't found an error is thrown.
      */
     private void initConnection() throws InfException {
-        try {
-            con = DriverManager.getConnection("jdbc:firebirdsql://localhost:3050/" + this.path +"?columnLabelForName=true", "SYSDBA", "masterkey");
-        } catch (SQLException e) {
-            throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
+        if(advancedmode==1) {
+            Object[] advCon = makeAdvanceConnect();
+            try {
+                con = DriverManager.getConnection(advCon[0].toString(),(Properties)advCon[1]);
+            } catch (SQLException e) {
+                throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
+            }
+        } else {
+            try {
+                con = DriverManager.getConnection("jdbc:firebirdsql://localhost:3050/" + this.path + "?columnLabelForName=true", "SYSDBA", "masterkey");
+            } catch (SQLException e) {
+                throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
+            }
         }
     }
 
     /**
-     * Opens a connection to the database with advanced settings
-     *
-     * @param params the parameters used to connect to the database
-     * @throws InfException If the DB connection couldn't be established, the advanced parameters aren't correct, the path to the DB isn't correct or the drivers for the database (jaybird-full-XX.jar) isn't found an error is thrown.
+     * helper method to create the string used to connect and the properties used to connect
+     * @return Array containing a String and Properties to make a connection to the DB
+     * @throws InfException if the parameters wasn't correct
      */
-    private void initConnection(HashMap<String, Object> params) throws InfException {
+    private Object[] makeAdvanceConnect() throws InfException {
         try {
-            InfDBHelper.advanceParmsCorrect(params);
+            InfDBHelper.advanceParmsCorrect(param);
         } catch (Exception e){
             throw new InfException(e);
         }
 
         StringBuilder conBuilder=new StringBuilder();
         conBuilder.append("jdbc:firebirdsql:");
-        conBuilder.append("//").append(params.get("HOST")).append("/").append(path);
+        conBuilder.append("//").append(param.get("HOST")).append("/").append(path);
 
         /* embedded code, commented out until i can figure out how the f* to get embedded to work
         if((Boolean) params.get("EMBEDDED"))conBuilder.append("embedded:");
@@ -119,17 +127,14 @@ public class InfDB {
         */
 
         Properties props=new Properties();
-        props.setProperty("user",(String)params.get("USER"));
-        props.setProperty("password",(String)params.get("PASSWORD"));
-        props.setProperty("encoding",(String)params.get("ENCODING"));
-        if((Boolean) params.get("COLUMNLABELFORNAME"))props.setProperty("columnLabelForName","true");
+        props.setProperty("user",(String)param.get("USER"));
+        props.setProperty("password",(String)param.get("PASSWORD"));
+        props.setProperty("encoding",(String)param.get("ENCODING"));
+        if((Boolean) param.get("COLUMNLABELFORNAME"))props.setProperty("columnLabelForName","true");
 
-        try {
-            con = DriverManager.getConnection(conBuilder.toString(),props);
-        } catch (SQLException e) {
-            throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
-        }
+        Object[] arr ={conBuilder,props};
 
+        return arr;
     }
 
     /**
@@ -153,11 +158,7 @@ public class InfDB {
     private void checkConnection() throws InfException {
         try {
             if(con == null || con.isClosed()) {
-                if (advancedmode == 0) {
                     initConnection();
-                } else if (advancedmode == 1) {
-                    initConnection(param);
-                }
             }
         } catch (SQLException e) {
             throw new InfException("A checkConnection to the database failed");
@@ -209,7 +210,7 @@ public class InfDB {
             Statement sm = con.createStatement();
             ResultSet rs = sm.executeQuery(query);
             while (rs.next()) {
-                result = new ArrayList<String>();
+                if(result==null)result = new ArrayList<String>();
                 result.add(rs.getString(1));
             }
         } catch (SQLException e) {
@@ -239,7 +240,7 @@ public class InfDB {
             int countColumns = rsmd.getColumnCount();
             int i = 1;
             if (rs.next()) {
-                result = new HashMap<String, String>();
+                if(result==null)result = new HashMap<String, String>();
                 while (i <= countColumns) {
                     result.put(rsmd.getColumnName(i), rs.getString(i));
                     i++;
@@ -425,10 +426,19 @@ public class InfDB {
      */
     public ResultSet getResultSet(String query) throws InfException {
         if(advancedmode!=1)throw new InfException("To use getResultSet() you must use the advanced connection parameters");
+
+        //need a separate connection as we don't want the ResultSet to close when we call another database query.
+        Connection rscon;
+        Object[] advCon = makeAdvanceConnect();
+        try {
+            rscon = DriverManager.getConnection(advCon[0].toString(),(Properties)advCon[1]);
+        } catch (SQLException e) {
+            throw new InfException("Couldn't open Firebird database, check your path. Make sure to use .FDB in the end");
+        }
+
         ResultSet rs=null;
         try {
-            checkConnection();
-            Statement sm = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            Statement sm = rscon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE,ResultSet.HOLD_CURSORS_OVER_COMMIT);
             boolean hasRS = sm.execute(query);
             if (hasRS) {
                 rs = sm.getResultSet();
