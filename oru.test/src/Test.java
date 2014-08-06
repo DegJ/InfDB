@@ -8,7 +8,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Properties;
 
 /**
  * Created by Nicklas on 2014-05-11.
@@ -148,7 +147,7 @@ public class Test {
     public void rstest(){
         ResultSet results= null;
         try {
-            results=dba.getResultSet("select * from agent");
+            results=dba.getResultSet("select aid,namn,telefon from agent");
         } catch (InfException e) {
             e.printStackTrace();
         }
@@ -170,6 +169,7 @@ public class Test {
                 results.updateString(2,c+"2");
                 String g=results.getString(2);
                 Connection con=results.getStatement().getConnection();
+
                 results.updateRow();
                 results.absolute(3);
                 String h=results.getString(2);
@@ -177,6 +177,17 @@ public class Test {
                 String i=results.getString(2);
                 String j=results.getCursorName();
                 System.out.println("ni hao: "+i+" ; :g:"+g);
+
+                String abc=db.fetchSingle("select namn from agent");
+
+                results.moveToInsertRow();
+                results.updateInt(1, Integer.parseInt(db.getAutoIncrement("agent","aid")));
+                results.updateString(2, "abc2");
+                results.updateString(3, "11111112");
+                //results.updateString(4, "ab@ab.com");
+                results.insertRow();
+                results.moveToCurrentRow();
+
                 String x=null;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -186,9 +197,8 @@ public class Test {
 
     public static void main(String[] args) {
         Test something = new Test();
-        //something.testFetchSingle();
-        something.testFetchColumn();
-        /*
+        something.testFetchSingle();
+
         something.testFetchColumn();
         something.testFetchRow();
         something.testFetchRows();
@@ -196,7 +206,7 @@ public class Test {
         something.testInsert();
         something.testDelete();
         something.testUpdate();
-        */
+
 
         /*
         Properties p = System.getProperties();
@@ -210,12 +220,6 @@ public class Test {
         */
         something.props();
         something.rstest();
-
-        /*
-        System.out.println("----");
-        System.out.println(System.getProperties().getProperty ("jdbc.drivers"));
-
-        */
     }
 
 

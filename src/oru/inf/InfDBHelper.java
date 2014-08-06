@@ -18,8 +18,8 @@ public final class InfDBHelper {
      * Get a HashMap containing parameters that is used to connect to a firebird database a non-default way.<br>
      * Usage: .put with new value overriding old one. <br>
      * <p>
-     * Parameters:<br>
-     * COLUMNLABELFORNAME, Boolean(True|False)<br>
+     * Parameters (defaults in parentheses):<br>
+     * COLUMNLABELFORNAME, Boolean(True)<br>
      * ENCODING, String(UTF8)<br>
      * USER, String(SYSDBA)<br>
      * PASSWORD, String(masterkey)<br>

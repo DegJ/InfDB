@@ -298,7 +298,7 @@ public class InfDB {
      * by replicating the letters and counting the number upwards.
      * <p>
      *     Example:<br>
-     *         int nextId = db.getAutoIncrement("agent","id");
+     *         String nextId = db.getAutoIncrement("agent","id");
      * @param table    The table where the number(ID) is located
      * @param attribute The column name in the table of the number(ID)
      * @return returns the number(ID) +1
@@ -408,11 +408,20 @@ public class InfDB {
     }
 
     /**
-     * Get a ResultSet of the query. The ResultSet is scroll insensitive and is updatable.<br>
+     * Get a ResultSet of the query. The ResultSet is scrollable, insensitive(it doesn't take into account if the data in the database has been changed since the ResultSet was fetched) and updatable.<br>
      * You must be in advanced mode to use this, connecting using InfDBHelper getAdvanceParams()<br>
      * Will return null if no results could be found with the query.<br>
      * Doesn't close the database connection after the ResultSet is returned.<br>
      * How to use: see Java API docs: http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html<br>
+     *     <p>
+     * There are a few conditions that are in place for the ResultSet to be updatable:<br>
+     * - the SELECT statement that generated the result set references only one table;<br>
+     * - all columns that are not referenced by the SELECT statement allow NULL
+     * values, otherwise it won't be possible to insert new rows;<br>
+     * - the SELECT statement does not contain DISTINCT predicate, aggregate
+     * functions, joined tables or stored procedures;<br>
+     * - the SELECT statement references all columns from the table primary key
+     * definition or the RDB$DB_KEY column.<br>
      * <p>
      * Hints/examples:<br>
      * cursor moves: next(), previous(), absolute(**index**).<br>
@@ -438,7 +447,8 @@ public class InfDB {
 
         ResultSet rs=null;
         try {
-            Statement sm = rscon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE,ResultSet.HOLD_CURSORS_OVER_COMMIT);
+            Statement sm = rscon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            sm.setQueryTimeout(3);
             boolean hasRS = sm.execute(query);
             if (hasRS) {
                 rs = sm.getResultSet();
